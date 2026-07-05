@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prophet League | كأس التوقعات الذكية</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;800&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0a0e17;
+            --bg-card: rgba(22, 27, 34, 0.7);
+            --primary: #00ff88;
+            --secondary: #ffd700;
+            --danger: #ff4757;
+            --text-light: #f1f5f9;
+            --text-dim: #94a3b8;
+            --glass-border: 1px solid rgba(255, 255, 255, 0.1);
+            --shadow-glow: 0 0 20px rgba(0, 255, 136, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: radial-gradient(circle at top left, #0f172a, #0a0e17), 
+                        radial-gradient(circle at bottom right, #052e16, #0a0e17);
+            color: var(--text-light);
+            font-family: 'Tajawal', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- Navigation & Header --- */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(10, 14, 23, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .logo { font-family: 'Cairo', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--secondary); text-transform: uppercase; letter-spacing: 1px; }
+        .user-profile { display: flex; gap: 20px; align-items: center; }
+        .points-badge { background: rgba(0, 255, 136, 0.1); color: var(--primary); padding: 8px 15px; border-radius: 20px; font-weight: 700; border: 1px solid var(--primary); }
+
+        /* --- Main Layout --- */
+        .container { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; padding: 40px 50px; max-width: 1600px; margin: 0 auto; }
+
+        /* --- Glass Card Style --- */
+        .card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(0,0,0,0.5); }
+        .card-title { font-family: 'Cairo', sans-serif; font-size: 1.5rem; color: var(--secondary); margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+
+        /* --- Match Analysis Centerpiece --- */
+        .arena { text-align: center; }
+        .teams-container { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; position: relative; }
+        .team-box { width: 45%; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 16px; transition: all 0.3s; }
+        .team-box:hover { background: rgba(255,255,255,0.08); border: 1px solid var(--primary); }
+        .team-flag { font-size: 3rem; margin-bottom: 10px; }
+        .team-name { font-size: 1.8rem; font-weight: 700; margin-bottom: 5px; }
+        .team-formation { color: var(--text-dim); font-size: 0.95rem; }
+        
+        .vs-badge { font-size: 2rem; font-weight: 900; color: var(--danger); background: rgba(255, 71, 87, 0.1); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(255, 71, 87, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); } }
+
+        /* Form Pills */
+        .form-pills { display: flex; justify-content: center; gap: 5px; margin-top: 15px; }
+        .pill { width: 25px; height: 25px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 0.8rem; }
+        .pill-w { background: var(--primary); color: #000; }
+        .pill-d { background: var(--text-dim); color: #000; }
+        .pill-l { background: var(--danger); color: #fff; }
+
+        /* Stats Grid */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-box { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; }
+        .stat-box h4 { color: var(--primary); margin-bottom: 10px; font-size: 1.1rem; display: flex; gap: 8px; align-items: center;}
+        .stat-box p { color: var(--text-dim); font-size: 0.9rem; line-height: 1.6; }
+
+        /* Probability Bar */
+        .prob-section { margin-bottom: 30px; }
+        .prob-title { text-align: right; margin-bottom: 10px; color: var(--text-dim); font-weight: 600; }
+        .prob-bar-container { height: 12px; border-radius: 10px; display: flex; overflow: hidden; background: #0a0e17; }
+        .prob-segment { height: 100%; transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .prob-win { background: var(--primary); }
+        .prob-draw { background: var(--secondary); }
+        .prob-loss { background: var(--danger); }
+        .prob-labels { display: flex; justify-content: space-between; margin-top: 8px; font-size: 0.85rem; }
+
+        /* Prediction Button & Error Msg */
+        .btn-predict { width: 100%; padding: 18px; background: linear-gradient(90deg, var(--primary), #00cc6a); border: none; border-radius: 12px; color: #000; font-family: 'Cairo', sans-serif; font-size: 1.3rem; font-weight: 800; cursor: pointer; transition: all 0.3s; box-shadow: var(--shadow-glow); }
+        .btn-predict:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(0, 255, 136, 0.4); }
+        
+        .wrong-prediction-msg { display: none; margin-top: 20px; background: rgba(255, 71, 87, 0.1); border: 1px solid var(--danger); border-radius: 12px; padding: 20px; text-align: center; color: var(--danger); font-weight: 700; animation: slideDown 0.5s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- Sidebar Elements --- */
+        .weekly-summary p { color: var(--text-dim); line-height: 1.8; margin-bottom: 15px; }
+        .comparison-bar { margin-top: 20px; }
+        .bar-bg { height: 10px; background: #1a1f2e; border-radius: 5px; margin-bottom: 10px; overflow: hidden; }
+        .bar-fill { height: 100%; background: linear-gradient(90deg, var(--secondary), var(--primary)); width: 0%; transition: width 1.5s ease; }
+
+        /* Leaderboard */
+        .leaderboard table { width: 100%; border-collapse: collapse; }
+        .leaderboard th, .leaderboard td { padding: 15px 10px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .leaderboard th { color: var(--secondary); font-size: 0.9rem; }
+        .leaderboard tr.current-user { background: rgba(0, 255, 136, 0.05); }
+        .leaderboard tr.current-user td { color: var(--primary); font-weight: 700; }
+        .rank-icon { font-size: 1.2rem; }
+
+        /* Prizes */
+        .prize-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: rgba(255,255,255,0.03); border-radius: 12px; margin-bottom: 12px; border-right: 4px solid transparent; }
+        .prize-gold { border-color: var(--secondary); }
+        .prize-silver { border-color: #b0c4de; }
+        .prize-bronze { border-color: #cd7f32; }
+        .prize-name { font-weight: 700; }
+        .prize-reward { color: var(--text-dim); font-size: 0.9rem; }
+
+        /* --- Smart Chatbot --- */
+        .bot-fab { position: fixed; bottom: 30px; left: 30px; width: 65px; height: 65px; background: var(--primary); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 2rem; color: #000; box-shadow: 0 5px 20px rgba(0,255,136,0.4); z-index: 100; transition: transform 0.3s; }
+        .bot-fab:hover { transform: rotate(15deg) scale(1.1); }
+        
+        .chat-window { position: fixed; bottom: 110px; left: 30px; width: 380px; height: 500px; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; display: none; flex-direction: column; z-index: 100; box-shadow: 0 20px 50px rgba(0,0,0,0.5); transform: scale(0.8); opacity: 0; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .chat-window.active { display: flex; transform: scale(1); opacity: 1; }
+        .chat-header { background: var(--primary); color: #000; padding: 15px; font-weight: 700; border-radius: 20px 20px 0 0; display: flex; justify-content: space-between; }
+        .chat-close { cursor: pointer; font-size: 1.2rem; font-weight: 900; }
+        .chat-body { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 80%; padding: 12px 16px; border-radius: 15px; font-size: 0.95rem; line-height: 1.5; }
+        .bot-msg { background: #1e293b; align-self: flex-start; border-bottom-left-radius: 5px; }
+        .user-msg { background: var(--primary); color: #000; align-self: flex-end; border-bottom-right-radius: 5px; }
+        .chat-quick-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .quick-btn { background: rgba(255,255,255,0.1); border: 1px solid var(--text-dim); color: var(--text-light); padding: 8px 12px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .quick-btn:hover { background: var(--primary); color: #000; border-color: var(--primary); }
+        .chat-input-area { display: flex; padding: 15px; gap: 10px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .chat-input { flex: 1; background: #1e293b; border: 1px solid #334155; color: #fff; padding: 10px; border-radius: 10px; outline: none; font-family: 'Tajawal'; }
+        .chat-send { background: var(--primary); border: none; padding: 0 20px; border-radius: 10px; cursor: pointer; font-weight: 700; color: #000; }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .container { grid-template-columns: 1fr; padding: 20px; }
+            header { padding: 15px 20px; }
+            .chat-window { width: calc(100% - 40px); left: 20px; bottom: 100px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Prophet League ⚽</div>
+        <div class="user-profile">
+            <div class="points-badge">رصيدك: 1,250 نقطة</div>
+            <div style="font-weight:600;">مرحباً، أيها النبي 👋</div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Main Content Area -->
+        <main>
+            <!-- Match Analysis Card -->
+            <div class="card arena">
+                <h2 class="card-title">🎯 تحليل مباريات اليوم: كلاسيكو الأمريكتين</h2>
+                <p style="color: var(--text-dim); margin-bottom: 30px;">بيانات حية وتحليل دقيق قبل وضع توقعك. القرار لك!</p>
+
+                <div class="teams-container">
+                    <div class="team-box">
+                        <div class="team-flag">🇧🇷</div>
+                        <div class="team-name">البرازيل</div>
+                        <div class="team-formation">4-3-3 (هجومي)</div>
+                        <div class="form-pills">
+                            <div class="pill pill-w" title="فوز">ف</div>
+                            <div class="pill pill-d" title="تعادل">ت</div>
+                            <div class="pill pill-w" title="فوز">ف</div>
+                            <div class="pill pill-l" title="خسارة">خ</div>
+                            <div class="pill pill-w" title="فوز">ف</div>
+                        </div>
+                    </div>
+
+                    <div class="vs-badge">VS</div>
+
+                    <div class="team-box">
+                        <div class="team-flag">🇦🇷</div>
+                        <div class="team-name">الأرجنتين</div>
+                        <div class="team-formation">4-4-2 (متوازن)</div>
+                        <div class="form-pills">
+                            <div class="pill pill-w" title="فوز">ف</div>
+                            <div class="pill pill-w" title="فوز">ف</div>
+                            <div class="pill pill-w" title="فوز">ف</div>
+                            <div class="pill pill-d" title="تعادل">ت</div>
+                            <div class="pill pill-w" title="فوز">ف</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <h4>🤕 الإصابات والغيابات</h4>
+                        <p>البرازيل: غياب نيمار ومارتينيلي. <br>الأرجنتين: غياب دي ماريا للإيقاف.</p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>📜 تاريخ المواجهات (آخر 10 مباريات)</h4>
+                        <p>4 انتصارات للبرازيل، 3 للأرجنتين، 3 تعادلات. تفوق طفيف للسامبا.</p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>🏟️ أرضية الملعب والطقس</h4>
+                        <p>ملعب ماراكانا التاريخي، رطوبة عالية 80% - يفضل المنتخب البرازيلي.</p>
+                    </div>
+                    <div class="stat-box">
+                        <h4>🔥 محرك الهدف (XG) المتوقع</h4>
+                        <p>البرازيل: 1.8 هدف متوقع. <br>الأرجنتين: 2.1 هدف متوقع.</p>
+                    </div>
+                </div>
+
+                <div class="prob-section">
+                    <div class="prob-title">📊 احتمالات النتيجة (بناءً على خوارزميات الذكاء الاصطناعي):</div>
+                    <div class="prob-bar-container">
+                        <div class="prob-segment prob-win" style="width: 45%;"></div>
+                        <div class="prob-segment prob-draw" style="width: 25%;"></div>
+                        <div class="prob-segment prob-loss" style="width: 30%;"></div>
+                    </div>
+                    <div class="prob-labels">
+                        <span style="color: var(--primary);">فوز البرازيل 45%</span>
+                        <span style="color: var(--secondary);">تعادل 25%</span>
+                        <span style="color: var(--danger);">فوز الأرجنتين 30%</span>
+                    </div>
+                </div>
+
+                <button class="btn-predict" onclick="submitPrediction()">ضمان التوقع الآن ⚡</button>
+
+                <!-- The specific required error message -->
+                <div class="wrong-prediction-msg" id="wrongMsg">
+                    ⚠️ للأسف توقعك كان قريب بس اليكور غلط! حاولت بس التحليل كان فيه نقطة ضعف. خسرت 10 نقاط، عوضها في المباراة الجاية يا بطل!
+                </div>
+            </div>
+
+            <!-- Weekly Summary -->
+            <div class="card">
+                <h2 class="card-title">📈 ملخصك الأسبوعي الشخصي</h2>
+                <p>مرحباً بك في قسم التقييم الذكي. هذا الأسبوع أداؤك كان <strong style="color: var(--primary);">ممتازاً جداً</strong> مقارنة بالأسابيع الماضية. أنت تتفوق حالياً على <strong style="color: var(--primary);">88% من المستخدمين</strong> النشطين.</p>
+                <div class="comparison-bar">
+                    <span style="font-size: 0.9rem; color: var(--text-dim);">معدل دقة توقعاتك: 75%</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 75%;"></div></div>
+                    <span style="font-size: 0.9rem; color: var(--text-dim);">معدل دقة المستخدمين الآخرين: 52%</span>
+                    <div class="bar-bg"><div class="bar-fill" style="width: 52%; background: var(--text-dim);"></div></div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside>
+            <!-- Leaderboard -->
+            <div class="card leaderboard">
+                <h2 class="card-title">🏆 المركز المتصدر</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>المستخدم</th>
+                            <th>الدقة</th>
+                            <th>النقاط</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="rank-icon">🥇</span></td>
+                            <td>صقر التوقعات</td>
+                            <td>92%</td>
+                            <td>4,850</td>
+                        </tr>
+                        <tr>
+                            <td><span class="rank-icon">🥈</span></td>
+                            <td>المحلل الذهبي</td>
+                            <td>89%</td>
+                            <td>4,200</td>
+                        </tr>
+                        <tr>
+                            <td><span class="rank-icon">🥉</span></td>
+                            <td>نبي الكرة</td>
+                            <td>86%</td>
+                            <td>3,900</td>
+                        </tr>
+                        <tr class="current-user">
+                            <td>12</td>
+                            <td>أنت (الزائر)</td>
+                            <td>75%</td>
+                            <td>1,250</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Prizes -->
+            <div class="card">
+                <h2 class="card-title">🎁 نظام النقاط والجوائز</h2>
+                <div class="prize-item prize-gold">
+                    <div class="prize-name">المركز الأول</div>
+                    <div class="prize-reward">PlayStation 5 Pro + هدية مفاجئة</div>
+                </div>
+                <div class="prize-item prize-silver">
+                    <div class="prize-name">المركز الثاني</div>
+                    <div class="prize-reward">كاش 200$ + قميص موقّع</div>
+                </div>
+                <div class="prize-item prize-bronze">
+                    <div class="prize-name">المركز الثالث</div>
+                    <div class="prize-reward">اشتراك VIP مدى الحياة</div>
+                </div>
+                <div style="margin-top: 15px; font-size: 0.85rem; color: var(--text-dim); text-align: center;">
+                    نقاطك تتجدد: 10 نقاط للفوز الصحيح، 5 للنتيجة الصحيحة فقط، صفر للخاطئ.
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Chatbot -->
+    <div class="bot-fab" onclick="toggleChat()">🤖</div>
+    <div class="chat-window" id="chatWindow">
+        <div class="chat-header">
+            المساعد الذكي للتحليل ⚡
+            <span class="chat-close" onclick="toggleChat()">✖</span>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="msg bot-msg">أهلاً بك يا بطل! أنا مساعدك الذكي. اسألني أي شيء عن المباريات، أو اضغط على الأزرار بالأسفل لتبدأ.</div>
+            
+            <div class="chat-quick-btns">
+                <button class="quick-btn" onclick="botReply('analysis')">تحليل مباريات اليوم</button>
+                <button class="quick-btn" onclick="botReply('prizes')">ما هي الجوائز؟</button>
+                <button class="quick-btn" onclick="botReply('rank')">كيف أرتفع في الترتيب؟</button>
+            </div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" class="chat-input" id="chatInput" placeholder="اكتب سؤالك هنا..." onkeypress="handleKeyPress(event)">
+            <button class="chat-send" onclick="sendMessage()">إرسال</button>
+        </div>
+    </div>
+
+    <script>
+        // Smooth UI Logic
+        function submitPrediction() {
+            // Simulating a wrong prediction scenario as requested
+            const msg = document.getElementById('wrongMsg');
+            msg.style.display = 'block';
+            msg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                msg.style.display = 'none';
+            }, 5000);
+        }
+
+        // Chatbot Logic
+        function toggleChat() {
+            const chat = document.getElementById('chatWindow');
+            chat.classList.toggle('active');
+        }
+
+        function appendMessage(text, sender) {
+            const chatBody = document.getElementById('chatBody');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = `msg ${sender}-msg`;
+            msgDiv.innerText = text;
+            chatBody.appendChild(msgDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        function botReply(type) {
+            let response = "";
+            if (type === 'analysis') {
+                response = "📊 تحليل مباراة اليوم (البرازيل ضد الأرجنتين):\n- البرازيل تملك تفوقاً في الأرضية والجمهور.\n- الأرجنتين تملك فورمة هجومية أفضل (XG 2.1).\n- غياب نيمار قد يضعف الجناح الأيسر للبرازيل.\n- توقعي الشخصي: فوز الأرجنتين بنتيجة 2-1 أو تعادل إيجابي. احذر من الإصابات في الشوط الثاني!";
+            } else if (type === 'prizes') {
+                response = "🎁 الجوائز رهيبة هذا الموسم! المركز الأول يفوز بـ PS5 Pro، والمركز الثاني 200$، والثالث اشتراك مدى الحياة. اجمع نقاطك بالتنبؤ الصحيح بالنتيجة والشكل!";
+            } else if (type === 'rank') {
+                response = "🚀 لترتفع في الترتيب، ركز على التنبؤ بالنتيجة الدقيقة (10 نقاط) وليس فقط الفائز (5 نقاط). راجع ملخصك الأسبوعي لتعرف نقاط ضعفك في التوقع.";
+            }
+            
+            appendMessage(response, 'bot');
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (text === "") return;
+
+            appendMessage(text, 'user');
+            input.value = '';
+
+            // Simple AI keyword matching
+            setTimeout(() => {
+                let response = "أنا بوت تجريبي، أستطيع الإجابة على: تحليل مباريات اليوم، الجوائز، أو طريقة الارتقاء في الترتيب. حاول استخدام الأزرار السريعة!";
+                if (text.includes('تحليل') || text.includes('مباريات') || text.includes('اليوم')) {
+                    botReply('analysis');
+                    return;
+                } else if (text.includes('جوائز') || text.includes('نقاط')) {
+                    botReply('prizes');
+                    return;
+                } else if (text.includes('ترتيب') || text.includes('مركز')) {
+                    botReply('rank');
+                    return;
+                }
+                appendMessage(response, 'bot');
+            }, 800);
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+    </script>
+
+</body>
+</html>
