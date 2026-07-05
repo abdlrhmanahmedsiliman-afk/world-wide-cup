@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prophet League | منصة التوقعات العالمية</title>
+    
+    <!-- ربط ملف التصميم (CSS) -->
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- ===================================== -->
+    <!-- 1. رأس الصفحة (Header & Navigation) -->
+    <!-- ===================================== -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1 class="logo">Prophet League ⚽</h1>
+                <p class="founder">مؤسس الموقع: <strong>عبدالرحمن أحمد</strong></p>
+            </div>
+            <ul class="nav-links">
+                <li class="active"><a href="#" data-sport="all">الكل</a></li>
+                <li><a href="#" data-sport="football">⚽ كرة قدم</a></li>
+                <li><a href="#" data-sport="basketball">🏀 كرة سلة</a></li>
+                <li><a href="#" data-sport="tennis">🎾 تنس</a></li>
+                <li><a href="#" data-sport="fight">🥊 كيك بوكسينغ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ===================================== -->
+    <!-- 2. قسم عرض المباريات (Matches Showcase) -->
+    <!-- ===================================== -->
+    <main class="container">
+        <div class="section-header">
+            <h2>المباريات المتاحة للتوقع</h2>
+            <p>اختر مباراتك المفضلة، قم بالتحليل، وضع توقعك الدقيق لتتصدر المشهد.</p>
+        </div>
+
+        <div class="matches-grid">
+            
+            <!-- كارت مباراة كرة قدم (جارية الآن) -->
+            <div class="match-card" data-sport="football">
+                <div class="card-header">
+                    <span class="sport-tag">⚽ كرة قدم</span>
+                    <span class="match-status status-live">🔴 جارية الآن</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-flag">🇧🇷</span>
+                        <h3>البرازيل</h3>
+                    </div>
+                    <div class="vs-time">
+                        <span class="time">22:00 م</span>
+                        <span class="vs-text">VS</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-flag">🇦🇷</span>
+                        <h3>الأرجنتين</h3>
+                    </div>
+                </div>
+                <form class="prediction-form">
+                    <div class="score-inputs">
+                        <input type="number" min="0" placeholder="0" class="score-box" aria-label="توقع الفريق الأول">
+                        <span>التوقع</span>
+                        <input type="number" min="0" placeholder="0" class="score-box" aria-label="توقع الفريق الثاني">
+                    </div>
+                    <button type="submit" class="btn-submit">إرسال التوقع</button>
+                </form>
+            </div>
+
+            <!-- كارت مباراة كرة سلة (قادمة) -->
+            <div class="match-card" data-sport="basketball">
+                <div class="card-header">
+                    <span class="sport-tag">🏀 كرة سلة</span>
+                    <span class="match-status status-upcoming">⏳ قادمة</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-flag">🏀</span>
+                        <h3>ليكرز</h3>
+                    </div>
+                    <div class="vs-time">
+                        <span class="time">01:30 ص</span>
+                        <span class="vs-text">VS</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-flag">🏀</span>
+                        <h3>سيلتكس</h3>
+                    </div>
+                </div>
+                <form class="prediction-form">
+                    <div class="score-inputs">
+                        <input type="number" min="0" placeholder="00" class="score-box" aria-label="توقع الفريق الأول">
+                        <span>التوقع</span>
+                        <input type="number" min="0" placeholder="00" class="score-box" aria-label="توقع الفريق الثاني">
+                    </div>
+                    <button type="submit" class="btn-submit">إرسال التوقع</button>
+                </form>
+            </div>
+
+            <!-- كارت مباراة تنس (انتهت) -->
+            <div class="match-card" data-sport="tennis">
+                <div class="card-header">
+                    <span class="sport-tag">🎾 تنس</span>
+                    <span class="match-status status-finished">✔️ انتهت</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-flag">🎾</span>
+                        <h3>جوكوفيتش</h3>
+                    </div>
+                    <div class="vs-time">
+                        <span class="time">18:00 م</span>
+                        <span class="vs-text">VS</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-flag">🎾</span>
+                        <h3>الكاراز</h3>
+                    </div>
+                </div>
+                <form class="prediction-form">
+                    <div class="score-inputs">
+                        <input type="number" min="0" placeholder="0" class="score-box" disabled aria-label="توقع مغلق">
+                        <span>التوقع</span>
+                        <input type="number" min="0" placeholder="0" class="score-box" disabled aria-label="توقع مغلق">
+                    </div>
+                    <button type="submit" class="btn-submit disabled" disabled>التوقعات مغلقة</button>
+                </form>
+            </div>
+
+            <!-- كارت مباراة كيك بوكسينغ (قادمة) -->
+            <div class="match-card" data-sport="fight">
+                <div class="card-header">
+                    <span class="sport-tag">🥊 كيك بوكسينغ</span>
+                    <span class="match-status status-upcoming">⏳ قادمة</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team">
+                        <span class="team-flag">🥊</span>
+                        <h3>تايسون فيوري</h3>
+                    </div>
+                    <div class="vs-time">
+                        <span class="time">23:00 م</span>
+                        <span class="vs-text">VS</span>
+                    </div>
+                    <div class="team">
+                        <span class="team-flag">🥊</span>
+                        <h3>فرانسيس نغانو</h3>
+                    </div>
+                </div>
+                <form class="prediction-form">
+                    <div class="score-inputs">
+                        <input type="number" min="0" placeholder="KO" class="score-box" aria-label="ضربة قاضية">
+                        <span>التوقع</span>
+                        <input type="number" min="0" placeholder="KO" class="score-box" aria-label="ضربة قاضية">
+                    </div>
+                    <button type="submit" class="btn-submit">إرسال التوقع</button>
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- ===================================== -->
+    <!-- 3. ربط ملف التفاعل والـ JavaScript -->
+    <!-- ===================================== -->
+    <script src="main.js"></script>
+</body>
+</html>
